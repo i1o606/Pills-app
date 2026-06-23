@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Витамины</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  --bg: #0d0f1a; --bg2: #111320; --card: #151824; --card2: #1a1e2e;
+  --border: #252a3d; --text: #e8eaf0; --muted: #6b7280; --accent: #2563eb;
+  --green: #22c55e; --red: #ef4444; --orange: #f59e0b; --purple: #a78bfa; --handle: #252a3d;
+  --font: 'Google Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+}
+[data-theme="light"] {
+  --bg: #f1f5f9; --bg2: #e8edf5; --card: #ffffff; --card2: #f8fafc;
+  --border: #e2e8f0; --text: #0f172a; --muted: #64748b; --handle: #cbd5e1;
+}
+body { font-family: var(--font); font-weight: 500; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 90px; transition: background .2s, color .2s; }
+.top-nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 16px 12px; position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--border); }
+.nav-title { font-size: 21px; font-weight: 700; letter-spacing: -.2px; }
+.nav-date  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.nav-right { display: flex; gap: 8px; }
+.icon-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 10px; width: 38px; height: 38px; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; }
+.icon-btn:hover { background: var(--card2); }
+.progress-section { padding: 14px 16px 0; }
+.progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+.progress-wrap { background: var(--card); border-radius: 99px; height: 7px; overflow: hidden; }
+.progress-bar  { height: 100%; background: var(--green); border-radius: 99px; transition: width .4s; }
+.group-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .9px; padding: 18px 16px 8px; }
+.list { padding: 0 16px; }
+.pill-card { background: var(--card); border-radius: 18px; border: 1.5px solid var(--border); padding: 14px; margin-bottom: 10px; transition: border-color .2s, opacity .2s, box-shadow .2s; cursor: grab; user-select: none; }
+.pill-card.done { opacity: .5; }
+.pill-card.dragging { opacity: .35; cursor: grabbing; }
+.pill-card.drag-over { border-color: var(--accent); }
+.pill-top { display: flex; align-items: flex-start; gap: 10px; }
+.drag-handle { color: var(--muted); font-size: 17px; cursor: grab; padding: 3px 2px 0 0; flex-shrink: 0; line-height: 1; }
+.pill-emoji { font-size: 24px; width: 44px; height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pill-main { flex: 1; min-width: 0; }
+.pill-name { font-size: 16px; font-weight: 700; letter-spacing: -.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pill-card.done .pill-name { text-decoration: line-through; color: var(--muted); }
+.pill-dose-line { font-size: 13px; color: var(--muted); margin-top: 3px; }
+.dose-total { display: inline-block; background: var(--card2); border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px; font-size: 11px; font-weight: 700; color: var(--accent); margin-left: 6px; vertical-align: middle; }
+.pill-time-line { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.pill-note { font-size: 12px; color: #818cf8; margin-top: 4px; font-style: italic; }
+.pill-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.small-btn { background: none; border: none; color: var(--muted); font-size: 15px; cursor: pointer; padding: 5px; border-radius: 7px; line-height: 1; transition: color .15s; }
+.small-btn:hover { color: var(--text); }
+.small-btn.del:hover { color: var(--red); }
+.checks-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 13px; }
+.check-pill { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s, border-color .15s, transform .1s; }
+.check-pill:active { transform: scale(.88); }
+.check-pill.checked { background: var(--green); border-color: var(--green); }
+.check-pill svg { display: none; }
+.check-pill.checked svg { display: block; }
+.course-wrap { margin-top: 12px; }
+.course-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 5px; font-weight: 600; }
+.course-track { background: var(--card2); border-radius: 99px; height: 5px; overflow: hidden; }
+.course-fill  { height: 100%; border-radius: 99px; transition: width .4s; }
+.pill-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.badge { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 3px 9px; font-size: 11px; color: var(--muted); font-weight: 600; }
+.badge.str { color: var(--orange); } .badge.mis { color: var(--red); } .badge.avg { color: var(--purple); }
+.empty { text-align: center; color: var(--muted); font-size: 14px; margin-top: 80px; line-height: 1.9; }
+.empty .big { font-size: 48px; margin-bottom: 12px; display: block; }
+.fab { position: fixed; bottom: 24px; right: 20px; background: var(--accent); color: #fff; border: none; border-radius: 50%; width: 54px; height: 54px; font-size: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px #2563eb55; z-index: 20; transition: background .15s, transform .15s; }
+.fab:hover { background: #1d4ed8; transform: scale(1.05); }
+.overlay { display: none; position: fixed; inset: 0; background: #000b; z-index: 100; align-items: flex-end; justify-content: center; }
+.overlay.open { display: flex; }
+.sheet { background: var(--card); border-radius: 22px 22px 0 0; padding: 20px 20px 44px; width: 100%; max-width: 500px; max-height: 92vh; overflow-y: auto; animation: slideUp .22s ease; }
+@keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.sheet-handle { width: 40px; height: 4px; background: var(--handle); border-radius: 99px; margin: 0 auto 18px; }
+.sheet h2 { font-size: 19px; font-weight: 700; margin-bottom: 18px; }
+.field-label { display: block; font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .7px; margin-bottom: 6px; margin-top: 14px; }
+input[type=text], input[type=time], input[type=number], input[type=date], textarea {
+  width: 100%; background: var(--bg); border: 1.5px solid var(--border); border-radius: 11px; color: var(--text); font-size: 15px; font-weight: 500; padding: 11px 13px; outline: none; font-family: var(--font); transition: border-color .15s; appearance: none;
+}
+input:focus, textarea:focus { border-color: var(--accent); }
+textarea { resize: none; height: 60px; }
+.row2 { display: flex; gap: 10px; } .row2 > div { flex: 1; }
+.row3 { display: flex; gap: 10px; } .row3 > div { flex: 1; }
+.dose-hint { font-size: 12px; color: var(--accent); font-weight: 600; margin-top: 5px; min-height: 16px; }
+.emoji-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.emoji-opt { font-size: 22px; width: 42px; height: 42px; border-radius: 11px; border: 2px solid transparent; background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .15s; }
+.emoji-opt.selected { border-color: var(--accent); background: #2563eb1a; }
+.color-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.color-opt { width: 30px; height: 30px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: border-color .15s, transform .15s; }
+.color-opt.selected { border-color: var(--text); transform: scale(1.18); }
+.template-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.tpl-btn { background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 7px 11px; font-size: 13px; font-weight: 600; color: var(--text); cursor: pointer; font-family: var(--font); transition: border-color .15s; }
+.tpl-btn:hover { border-color: var(--accent); }
+.modal-btns { display: flex; gap: 10px; margin-top: 20px; }
+.btn { flex: 1; padding: 14px; border-radius: 13px; font-size: 15px; font-weight: 700; border: none; cursor: pointer; font-family: var(--font); transition: background .15s; }
+.btn-cancel { background: var(--card2); color: var(--muted); }
+.btn-save   { background: var(--accent); color: #fff; }
+.overall-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.overall-card { background: var(--card2); border-radius: 13px; padding: 14px; text-align: center; }
+.overall-card .big-num { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+.overall-card .sub { font-size: 11px; color: var(--muted); font-weight: 600; }
+.stat-block { background: var(--card2); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
+.stat-block h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+.stat-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); padding: 5px 0; border-bottom: 1px solid var(--border); }
+.stat-row:last-child { border-bottom: none; }
+.stat-val { color: var(--text); font-weight: 700; }
+.export-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; border-radius: 12px; background: var(--card2); border: 1.5px solid var(--border); color: var(--text); font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 12px; font-family: var(--font); transition: border-color .15s; }
+.export-btn:hover { border-color: var(--accent); }
+@keyframes flashGreen { 0% { box-shadow: 0 0 0 0 #22c55e88; } 60% { box-shadow: 0 0 0 14px #22c55e00; } 100% { box-shadow: 0 0 0 0 #22c55e00; } }
+.flash { animation: flashGreen .55s ease; }
+</style>
+</head>
+<body>
+<div class="top-nav">
+  <div><div class="nav-title">💊 Витамины</div><div class="nav-date" id="navDate"></div></div>
+  <div class="nav-right">
+    <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <button class="icon-btn" onclick="openArchive()">🗂</button>
+    <button class="icon-btn" onclick="openStats()">📊</button>
+  </div>
+</div>
+<div class="progress-section">
+  <div class="progress-label"><span id="progressLabel">Сегодня</span><span id="progressPct">0%</span></div>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+</div>
+<div id="mainList"></div>
+<button class="fab" onclick="openModal()">+</button>
+
+<div class="overlay" id="formOverlay" onclick="bgClick(event,'formOverlay')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h2 id="formTitle">Добавить витамин</h2>
+    <span class="field-label">Шаблоны</span><div class="template-grid" id="tplGrid"></div>
+    <span class="field-label">Эмодзи</span><div class="emoji-grid" id="emojiGrid"></div>
+    <span class="field-label">Цвет</span><div class="color-grid" id="colorGrid"></div>
+    <span class="field-label">Название</span>
+    <input type="text" id="iName" placeholder="Например: Витамин D3" />
+    <div class="row3">
+      <div><span class="field-label">Таблеток за приём</span><input type="number" id="iTablets" min="0.5" max="20" step="0.5" value="1" oninput="updateDoseHint()"/></div>
+      <div><span class="field-label">мг в одной</span><input type="number" id="iMgPerTab" min="0" max="100000" step="1" value="" placeholder="необяз." oninput="updateDoseHint()"/></div>
+      <div><span class="field-label">Единица</span><input type="text" id="iUnit" placeholder="мг/МЕ/мкг" value="мг"/></div>
+    </div>
+    <div class="dose-hint" id="doseHint"></div>
+    <span class="field-label">Заметка</span>
+    <textarea id="iNote" placeholder="До/после/во время еды..."></textarea>
+    <div class="row2">
+      <div><span class="field-label">Раз в день</span><input type="number" id="iCount" min="1" max="10" value="1" oninput="updateDoseHint()"/></div>
+      <div><span class="field-label">Время приёма</span><input type="time" id="iTakeTime" value="08:00"/></div>
+    </div>
+    <div class="row2">
+      <div><span class="field-label">Сброс в</span><input type="time" id="iReset" value="00:00"/></div>
+      <div><span class="field-label">Курс (дней, 0=∞)</span><input type="number" id="iCourse" min="0" max="730" value="0"/></div>
+    </div>
+    <div><span class="field-label">Дата начала</span><input type="date" id="iStart"/></div>
+    <div class="modal-btns">
+      <button class="btn btn-cancel" onclick="closeOverlay('formOverlay')">Отмена</button>
+      <button class="btn btn-save" onclick="savePill()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="statsOverlay" onclick="bgClick(event,'statsOverlay')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h2>📊 Статистика</h2>
+    <div id="statsContent"></div>
+    <button class="export-btn" onclick="exportStats()">⬇️ Экспорт в текстовый файл</button>
+    <div class="modal-btns"><button class="btn btn-cancel" onclick="closeOverlay('statsOverlay')">Закрыть</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="archiveOverlay" onclick="bgClick(event,'archiveOverlay')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h2>🗂 Архив</h2>
+    <div id="archiveContent"></div>
+    <div class="modal-btns"><button class="btn btn-cancel" onclick="closeOverlay('archiveOverlay')">Закрыть</button></div>
+  </div>
+</div>
+
+<script>
+const EMOJIS=['💊','🌿','🧬','⚡','💪','🧠','❤️','🌙','☀️','🍋','🫐','🦴','👁️','🩸','🔋','🐟'];
+const COLORS=['#1e293b','#1a2e1e','#2e1e1e','#1e1e2e','#2e2e1e','#1e2e2e','#2e1e2e','#292929'];
+const DOTS=['#64748b','#22c55e','#ef4444','#818cf8','#eab308','#06b6d4','#d946ef','#9ca3af'];
+const TEMPLATES=[
+  {name:'Витамин D3',tablets:1,mg:2000,unit:'МЕ',emoji:'☀️',note:'с едой',takeTime:'08:00'},
+  {name:'Магний',tablets:1,mg:400,unit:'мг',emoji:'🦴',note:'вечером',takeTime:'21:00'},
+  {name:'Омега-3',tablets:1,mg:1000,unit:'мг',emoji:'🐟',note:'с едой',takeTime:'12:00'},
+  {name:'Витамин C',tablets:1,mg:500,unit:'мг',emoji:'🍋',note:'',takeTime:'08:00'},
+  {name:'B12',tablets:1,mg:500,unit:'мкг',emoji:'🔋',note:'утром натощак',takeTime:'07:30'},
+  {name:'Цинк',tablets:1,mg:15,unit:'мг',emoji:'⚡',note:'не с кофе',takeTime:'08:00'},
+  {name:'Железо',tablets:1,mg:18,unit:'мг',emoji:'🩸',note:'натощак',takeTime:'07:00'},
+  {name:'Витамин K2',tablets:1,mg:100,unit:'мкг',emoji:'🌿',note:'с едой',takeTime:'08:00'},
+];
+const KEY='vitamins_v5';
+let pills=[],archive=[],editId=null,selEmoji=EMOJIS[0],selColor=COLORS[0];
+
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY))||{};pills=d.pills||[];archive=d.archive||[];}catch{pills=[];archive=[];}}
+function save(){localStorage.setItem(KEY,JSON.stringify({pills,archive}));}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
+function pad(n){return String(n).padStart(2,'0');}
+function todayStr(){const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
+function dateStr(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
+function fmtDate(s){if(!s)return'—';return new Date(s+'T00:00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'});}
+function fmtTime(ms){if(!ms)return'—';const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);return h>0?`${h}ч ${pad(m)}м`:`${pad(m)}м`;}
+function groupLabel(t){const h=parseInt(t.split(':')[0]);if(h>=5&&h<12)return'Утро';if(h>=12&&h<18)return'День';if(h>=18&&h<23)return'Вечер';return'Ночь';}
+
+function expectedReset(rt){const now=new Date(),[rh,rm]=rt.split(':').map(Number);const r=new Date(now.getFullYear(),now.getMonth(),now.getDate(),rh,rm,0);if(now>=r)return todayStr();const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-1);return dateStr(d);}
+
+function autoReset(){
+  let changed=false;
+  pills.forEach(p=>{
+    const exp=expectedReset(p.resetTime);
+    if(p.lastResetDate!==exp){
+      if(p.lastResetDate){if(p.checked.every(Boolean))p.takenDays=(p.takenDays||0)+1;else p.missedDays=(p.missedDays||0)+1;}
+      p.checked=new Array(p.count).fill(false);p.lastResetDate=exp;changed=true;
+    }
+  });
+  pills=pills.filter(p=>{if(!p.courseDays)return true;if((p.takenDays||0)>=p.courseDays){p.archivedAt=todayStr();archive.push(p);changed=true;return false;}return true;});
+  if(changed)save();
+}
+
+function courseProgress(p){if(!p.courseDays)return null;const taken=(p.takenDays||0)+(p.checked.every(Boolean)?1:0);return{taken,total:p.courseDays,pct:Math.min(100,Math.round(taken/p.courseDays*100)),daysLeft:Math.max(0,p.courseDays-taken)};}
+
+function toggleTheme(){const dark=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',dark?'light':'dark');document.getElementById('themeBtn').textContent=dark?'🌙':'☀️';localStorage.setItem('vit_theme',dark?'light':'dark');}
+function loadTheme(){const t=localStorage.getItem('vit_theme')||'dark';document.documentElement.setAttribute('data-theme',t);document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';}
+
+function render(){
+  autoReset();
+  const now=new Date();const ds=now.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('navDate').textContent=ds.charAt(0).toUpperCase()+ds.slice(1);
+  const total=pills.reduce((s,p)=>s+p.count,0);const done=pills.reduce((s,p)=>s+p.checked.filter(Boolean).length,0);const pct=total?Math.round(done/total*100):0;
+  document.getElementById('progressBar').style.width=pct+'%';document.getElementById('progressLabel').textContent=`Принято ${done} из ${total}`;document.getElementById('progressPct').textContent=pct+'%';
+  const container=document.getElementById('mainList');
+  if(!pills.length){container.innerHTML='<div class="empty"><span class="big">🌿</span>Нажми + чтобы добавить<br>первый витамин</div>';return;}
+  const groups={};pills.forEach(p=>{const g=groupLabel(p.takeTime||p.resetTime);if(!groups[g])groups[g]=[];groups[g].push(p);});
+  const order=['Утро','День','Вечер','Ночь'];let html='';
+  order.forEach(g=>{if(!groups[g])return;html+=`<div class="group-label">${g}</div><div class="list" id="grp_${g}">`;html+=groups[g].map(pillHTML).join('');html+=`</div>`;});
+  container.innerHTML=html;order.forEach(g=>{if(groups[g])attachDrag('grp_'+g);});
+}
+
+function pillHTML(p){
+  const allDone=p.checked.every(Boolean);const cp=courseProgress(p);const dot=DOTS[COLORS.indexOf(p.bgColor)]||DOTS[0];
+  const [rh,rm]=p.resetTime.split(':').map(Number);const takeLabel=p.takeTime||'';
+  const checks=p.checked.map((c,i)=>`<div class="check-pill ${c?'checked':''}" onclick="toggle('${p.id}',${i})"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><polyline points="2,6.5 5.5,10 11,3" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`).join('');
+  const courseBar=cp?`<div class="course-wrap"><div class="course-label"><span>Курс: ${cp.taken}/${cp.total} дн.</span><span>${cp.pct}% · осталось ${cp.daysLeft} дн.</span></div><div class="course-track"><div class="course-fill" style="width:${cp.pct}%;background:${dot}"></div></div></div>`:'';
+  const badges=`<div class="pill-badges">${(p.streak||0)>0?`<div class="badge str">🔥 ${p.streak} дн.</div>`:''} ${(p.missedDays||0)>0?`<div class="badge mis">⚠️ ${p.missedDays} пропуск</div>`:''} ${p.avgCheckMs?`<div class="badge avg">⏱ ${fmtTime(p.avgCheckMs)}</div>`:''}<div class="badge">🔄 ${pad(rh)}:${pad(rm)}</div></div>`;
+const tabs=parseFloat(p.tablets)||1,mg=parseFloat(p.mgPerTab)||0,unit=p.unit||'мг',count=parseInt(p.count)||1;
+  const totalMgDay=mg?`<span class="dose-total">${tabs*mg*count} ${unit}/день</span>`:'';
+  return `<div class="pill-card ${allDone?'done':''}" id="pc_${p.id}" data-id="${p.id}" style="${allDone?`border-color:${dot}44`:''}" draggable="true"><div class="pill-top"><div class="drag-handle">⠿</div><div class="pill-emoji" style="background:${p.bgColor||COLORS[0]}">${p.emoji||'💊'}</div><div class="pill-main"><div class="pill-name">${p.name}</div><div class="pill-dose-line">${tabs} таб. ${mg?`× ${mg} ${unit}`:''} ${count>1?`· ${count}×/день`:''} ${totalMgDay}</div>${takeLabel?`<div class="pill-time-line">⏰ ${takeLabel}${p.startDate?' · с '+fmtDate(p.startDate):''}</div>`:''}${p.note?`<div class="pill-note">${p.note}</div>`:''}</div><div class="pill-actions"><button class="small-btn" onclick="openModal('${p.id}')">✏️</button><button class="small-btn" onclick="archivePill('${p.id}')">🗂</button><button class="small-btn del" onclick="deletePill('${p.id}')">🗑️</button></div></div><div class="checks-row">${checks}</div>${courseBar}${badges}</div>`;
+}
+
+function toggle(id,idx){
+  const p=pills.find(x=>x.id===id);if(!p)return;p.checked[idx]=!p.checked[idx];
+  if(p.checked[idx]){const now=new Date();const ms=(now.getHours()*3600+now.getMinutes()*60+now.getSeconds())*1000;if(!p.checkTimeSamples)p.checkTimeSamples=[];p.checkTimeSamples.push(ms);if(p.checkTimeSamples.length>30)p.checkTimeSamples.shift();p.avgCheckMs=Math.round(p.checkTimeSamples.reduce((a,b)=>a+b,0)/p.checkTimeSamples.length);}
+  if(p.checked.every(Boolean)){const today=todayStr();if(p.lastStreakDate!==today){p.streak=(p.streak||0)+1;p.lastStreakDate=today;}if(navigator.vibrate)navigator.vibrate([30,15,60]);const el=document.getElementById('pc_'+id);if(el){el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');}}
+  save();render();
+}
+
+function deletePill(id){if(!confirm('Удалить?'))return;pills=pills.filter(x=>x.id!==id);save();render();}
+function archivePill(id){const p=pills.find(x=>x.id===id);if(!p)return;p.archivedAt=todayStr();archive.push(p);pills=pills.filter(x=>x.id!==id);save();render();}
+
+let dragId=null,dragGroupId=null;
+function attachDrag(gid){const c=document.getElementById(gid);if(!c)return;c.querySelectorAll('.pill-card').forEach(card=>{card.addEventListener('dragstart',e=>{dragId=card.dataset.id;dragGroupId=gid;setTimeout(()=>card.classList.add('dragging'),0);});card.addEventListener('dragend',()=>card.classList.remove('dragging'));card.addEventListener('dragover',e=>{e.preventDefault();c.querySelectorAll('.pill-card').forEach(x=>x.classList.remove('drag-over'));card.classList.add('drag-over');});card.addEventListener('drop',e=>{e.preventDefault();card.classList.remove('drag-over');if(!dragId||dragId===card.dataset.id||dragGroupId!==gid)return;const fi=pills.findIndex(x=>x.id===dragId),ti=pills.findIndex(x=>x.id===card.dataset.id);if(fi<0||ti<0)return;const[m]=pills.splice(fi,1);pills.splice(ti,0,m);save();render();});});}
+
+function updateDoseHint(){const tabs=parseFloat(document.getElementById('iTablets').value)||1;const mg=parseFloat(document.getElementById('iMgPerTab').value)||0;const unit=document.getElementById('iUnit').value||'мг';const count=parseInt(document.getElementById('iCount').value)||1;const hint=document.getElementById('doseHint');if(!mg){hint.textContent='';return;}const perDose=tabs*mg;const perDay=perDose*count;hint.textContent=count>1?`${perDose} ${unit}/приём · ${perDay} ${unit}/день`:`${perDose} ${unit}/день`;}
+
+function openStats(){
+  const totalTaken=pills.reduce((s,p)=>s+(p.takenDays||0),0);const totalMissed=pills.reduce((s,p)=>s+(p.missedDays||0),0);const bestStreak=pills.reduce((s,p)=>Math.max(s,p.streak||0),0);
+  const overall=`<div class="overall-grid"><div class="overall-card"><div class="big-num" style="color:var(--green)">${totalTaken}</div><div class="sub">дней принято</div></div><div class="overall-card"><div class="big-num" style="color:var(--red)">${totalMissed}</div><div class="sub">пропущено</div></div><div class="overall-card"><div class="big-num" style="color:var(--orange)">🔥${bestStreak}</div><div class="sub">лучший streak</div></div><div class="overall-card"><div class="big-num" style="color:var(--purple)">${pills.length}</div><div class="sub">активных</div></div></div>`;
+  const perPill=pills.map(p=>{const cp=courseProgress(p);const taken=p.takenDays||0,missed=p.missedDays||0;const pct=taken+missed?Math.round(taken/(taken+missed)*100):100;const tabs=parseFloat(p.tablets)||1,mg=parseFloat(p.mgPerTab)||0,unit=p.unit||'мг';const totalTabs=taken*tabs*(parseInt(p.count)||1);const totalMg=mg?totalTabs*mg:0;return`<div class="stat-block"><h3>${p.emoji||'💊'} ${p.name}</h3><div class="stat-row"><span>Дней принято</span><span class="stat-val" style="color:var(--green)">${taken}</span></div><div class="stat-row"><span>Пропущено</span><span class="stat-val" style="color:var(--red)">${missed}</span></div><div class="stat-row"><span>% приёма</span><span class="stat-val">${pct}%</span></div>${totalTabs?`<div class="stat-row"><span>Таблеток всего</span><span class="stat-val">${totalTabs} шт.</span></div>`:''}${totalMg?`<div class="stat-row"><span>Всего принято</span><span class="stat-val">${totalMg} ${unit}</span></div>`:''}<div class="stat-row"><span>Streak</span><span class="stat-val" style="color:var(--orange)">🔥 ${p.streak||0}</span></div><div class="stat-row"><span>Среднее время</span><span class="stat-val" style="color:var(--purple)">${p.avgCheckMs?fmtTime(p.avgCheckMs):'—'}</span></div>${cp?`<div class="stat-row"><span>Прогресс курса</span><span class="stat-val">${cp.taken}/${cp.total} (${cp.pct}%)</span></div>`:''}</div>`;}).join('');
+  document.getElementById('statsContent').innerHTML=overall+perPill;document.getElementById('statsOverlay').classList.add('open');
+}
+
+function exportStats(){const lines=['СТАТИСТИКА ВИТАМИНОВ','Дата: '+new Date().toLocaleDateString('ru-RU'),''];pills.forEach(p=>{const taken=p.takenDays||0,missed=p.missedDays||0;const pct=taken+missed?Math.round(taken/(taken+missed)*100):100;const tabs=parseFloat(p.tablets)||1,mg=parseFloat(p.mgPerTab)||0,unit=p.unit||'мг';const totalTabs=taken*tabs*(parseInt(p.count)||1);lines.push(`${p.emoji||''} ${p.name}`);if(mg)lines.push(`  Дозировка: ${tabs} таб. × ${mg} ${unit} = ${tabs*mg*(parseInt(p.count)||1)} ${unit}/день`);lines.push(`  Принято: ${taken} дн. | Пропущено: ${missed} | ${pct}%`);if(totalTabs)lines.push(`  Таблеток принято: ${totalTabs} шт.${mg?' ('+totalTabs*mg+' '+unit+')':''}`);lines.push(`  Streak: ${p.streak||0} дн. | Среднее время: ${p.avgCheckMs?fmtTime(p.avgCheckMs):'—'}`);if(p.courseDays){const cp=courseProgress(p);if(cp)lines.push(`  Курс: ${cp.taken}/${cp.total} дн. (${cp.pct}%)`);}lines.push('');});if(archive.length){lines.push('── АРХИВ ──');archive.forEach(p=>lines.push(`${p.emoji||''} ${p.name} — завершён ${fmtDate(p.archivedAt)}`));}const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='vitamins_stats.txt';a.click();}
+
+function openArchive(){const c=document.getElementById('archiveContent');if(!archive.length){c.innerHTML='<div class="empty" style="margin-top:20px">Архив пуст</div>';}else{c.innerHTML=archive.map(p=>`<div class="stat-block"><h3>${p.emoji||'💊'} ${p.name}</h3><div class="stat-row"><span>Завершён</span><span class="stat-val">${fmtDate(p.archivedAt)}</span></div><div class="stat-row"><span>Принято дней</span><span class="stat-val">${p.takenDays||0}</span></div><div class="stat-row"><span>Пропущено</span><span class="stat-val">${p.missedDays||0}</span></div><div class="stat-row"><span>Streak</span><span class="stat-val">🔥 ${p.streak||0}</span></div><button class="export-btn" style="margin-top:8px" onclick="restorePill('${p.id}')">↩️ Восстановить</button></div>`).join('');}document.getElementById('archiveOverlay').classList.add('open');}
+function restorePill(id){const idx=archive.findIndex(x=>x.id===id);if(idx<0)return;const p=archive.splice(idx,1)[0];p.archivedAt=null;p.checked=new Array(p.count).fill(false);p.lastResetDate=expectedReset(p.resetTime);pills.push(p);save();render();closeOverlay('archiveOverlay');}
+
+function buildPickers(){document.getElementById('emojiGrid').innerHTML=EMOJIS.map(e=>`<div class="emoji-opt ${e===selEmoji?'selected':''}" onclick="pickEmoji('${e}')">${e}</div>`).join('');document.getElementById('colorGrid').innerHTML=DOTS.map((c,i)=>`<div class="color-opt ${COLORS[i]===selColor?'selected':''}" style="background:${c}" onclick="pickColor(${i})"></div>`).join('');document.getElementById('tplGrid').innerHTML=TEMPLATES.map((t,i)=>`<button class="tpl-btn" onclick="applyTemplate(${i})">${t.emoji} ${t.name}</button>`).join('');}
+function pickEmoji(e){selEmoji=e;buildPickers();}
+function pickColor(i){selColor=COLORS[i];buildPickers();}
+function applyTemplate(i){const t=TEMPLATES[i];selEmoji=t.emoji;document.getElementById('iName').value=t.name;document.getElementById('iTablets').value=t.tablets;document.getElementById('iMgPerTab').value=t.mg;document.getElementById('iUnit').value=t.unit;document.getElementById('iNote').value=t.note;document.getElementById('iTakeTime').value=t.takeTime;buildPickers();updateDoseHint();}
+
+function openModal(id){
+  editId=id||null;document.getElementById('formTitle').textContent=editId?'Редактировать':'Добавить витамин';
+  if(editId){const p=pills.find(x=>x.id===editId);selEmoji=p.emoji||EMOJIS[0];selColor=p.bgColor||COLORS[0];document.getElementById('iName').value=p.name;document.getElementById('iTablets').value=p.tablets||1;document.getElementById('iMgPerTab').value=p.mgPerTab||'';document.getElementById('iUnit').value=p.unit||'мг';document.getElementById('iNote').value=p.note||'';document.getElementById('iCount').value=p.count;document.getElementById('iTakeTime').value=p.takeTime||'08:00';document.getElementById('iReset').value=p.resetTime;document.getElementById('iCourse').value=p.courseDays||0;document.getElementById('iStart').value=p.startDate||todayStr();}
+  else{selEmoji=EMOJIS[0];selColor=COLORS[0];['iName','iNote'].forEach(i=>document.getElementById(i).value='');document.getElementById('iTablets').value=1;document.getElementById('iMgPerTab').value='';document.getElementById('iUnit').value='мг';document.getElementById('iCount').value=1;document.getElementById('iTakeTime').value='08:00';document.getElementById('iReset').value='00:00';document.getElementById('iCourse').value=0;document.getElementById('iStart').value=todayStr();}
+  buildPickers();updateDoseHint();document.getElementById('formOverlay').classList.add('open');setTimeout(()=>document.getElementById('iName').focus(),150);
+}
+
+function savePill(){
+  const name=document.getElementById('iName').value.trim();if(!name){document.getElementById('iName').focus();return;}
+  const tablets=parseFloat(document.getElementById('iTablets').value)||1;const mgPerTab=parseFloat(document.getElementById('iMgPerTab').value)||0;const unit=document.getElementById('iUnit').value.trim()||'мг';const note=document.getElementById('iNote').value.trim();const count=Math.max(1,Math.min(10,parseInt(document.getElementById('iCount').value)||1));const takeTime=document.getElementById('iTakeTime').value||'08:00';const resetTime=document.getElementById('iReset').value||'00:00';const courseDays=parseInt(document.getElementById('iCourse').value)||0;const startDate=document.getElementById('iStart').value||todayStr();const dotColor=DOTS[COLORS.indexOf(selColor)]||DOTS[0];
+  if(editId){const p=pills.find(x=>x.id===editId);Object.assign(p,{emoji:selEmoji,bgColor:selColor,dotColor,name,tablets,mgPerTab,unit,note,count,takeTime,resetTime,courseDays,startDate});if(count!==p.checked.length){p.checked=new Array(count).fill(false);}}
+  else{pills.push({id:uid(),emoji:selEmoji,bgColor:selColor,dotColor,name,tablets,mgPerTab,unit,note,count,takeTime,resetTime,courseDays,startDate,checked:new Array(count).fill(false),lastResetDate:expectedReset(resetTime),streak:0,lastStreakDate:null,takenDays:0,missedDays:0,checkTimeSamples:[],avgCheckMs:0});}
+  save();closeOverlay('formOverlay');render();
+}
+
+function closeOverlay(id){document.getElementById(id).classList.remove('open');editId=null;}
+function bgClick(e,id){if(e.target===document.getElementById(id))closeOverlay(id);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')['formOverlay','statsOverlay','archiveOverlay'].forEach(closeOverlay);if(e.key==='Enter'&&document.getElementById('formOverlay').classList.contains('open'))savePill();});
+
+loadTheme();load();render();setInterval(render,60000);
+</script>
+</body>
+</html>
