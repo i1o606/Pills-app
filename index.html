@@ -20,6 +20,13 @@
 }
 body { font-family: var(--font); font-weight: 500; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 90px; transition: background .2s, color .2s; }
 
+/* LOADER */
+.loader-wrap { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 200; transition: opacity .3s; }
+.loader-wrap.hidden { opacity: 0; pointer-events: none; }
+.spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loader-text { font-size: 14px; color: var(--muted); }
+
 .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 16px 12px; position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--border); }
 .nav-title { font-size: 21px; font-weight: 700; letter-spacing: -.2px; }
 .nav-date  { font-size: 12px; color: var(--muted); margin-top: 2px; }
@@ -27,7 +34,13 @@ body { font-family: var(--font); font-weight: 500; background: var(--bg); color:
 .icon-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 10px; width: 38px; height: 38px; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; }
 .icon-btn:hover { background: var(--card2); }
 
-.progress-section { padding: 14px 16px 0; }
+/* SAVE STATUS */
+.save-status { font-size: 11px; color: var(--muted); text-align: right; padding: 4px 16px 0; min-height: 18px; transition: color .3s; }
+.save-status.saving { color: var(--orange); }
+.save-status.saved  { color: var(--green); }
+.save-status.error  { color: var(--red); }
+
+.progress-section { padding: 10px 16px 0; }
 .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
 .progress-wrap { background: var(--card); border-radius: 99px; height: 7px; overflow: hidden; }
 .progress-bar  { height: 100%; background: var(--green); border-radius: 99px; transition: width .4s; }
@@ -35,17 +48,8 @@ body { font-family: var(--font); font-weight: 500; background: var(--bg); color:
 .group-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .9px; padding: 18px 16px 8px; }
 .list { padding: 0 16px; }
 
-.pill-card {
-  background: var(--card);
-  border-radius: 18px;
-  border: 2px solid var(--border);
-  padding: 14px;
-  margin-bottom: 10px;
-  transition: border-color .2s, opacity .2s, box-shadow .2s;
-  user-select: none;
-}
+.pill-card { background: var(--card); border-radius: 18px; border: 2px solid var(--border); padding: 14px; margin-bottom: 10px; transition: border-color .2s, opacity .2s; user-select: none; }
 .pill-card.done { opacity: .45; }
-
 .pill-top { display: flex; align-items: flex-start; gap: 10px; }
 .pill-order { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; padding-top: 2px; }
 .order-btn { background: none; border: none; color: var(--muted); font-size: 14px; cursor: pointer; padding: 2px 4px; line-height: 1; border-radius: 4px; transition: color .15s; }
@@ -85,12 +89,6 @@ body { font-family: var(--font); font-weight: 500; background: var(--bg); color:
 .fab { position: fixed; bottom: 24px; right: 20px; background: var(--accent); color: #fff; border: none; border-radius: 50%; width: 54px; height: 54px; font-size: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px #2563eb55; z-index: 20; transition: background .15s, transform .15s; }
 .fab:hover { background: #1d4ed8; transform: scale(1.05); }
 
-/* SYNC BUTTON */
-.sync-bar { padding: 12px 16px 0; }
-.sync-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; border-radius: 13px; background: #2563eb18; border: 1.5px solid #2563eb44; color: var(--accent); font-size: 14px; font-weight: 700; cursor: pointer; font-family: var(--font); transition: background .15s; }
-.sync-btn:hover { background: #2563eb28; }
-.sync-btn.success { background: #22c55e18; border-color: #22c55e44; color: var(--green); }
-
 .overlay { display: none; position: fixed; inset: 0; background: #000b; z-index: 100; align-items: flex-end; justify-content: center; }
 .overlay.open { display: flex; }
 .sheet { background: var(--card); border-radius: 22px 22px 0 0; padding: 20px 20px 44px; width: 100%; max-width: 500px; max-height: 92vh; overflow-y: auto; animation: slideUp .22s ease; }
@@ -112,7 +110,6 @@ textarea { resize: none; height: 60px; }
 .emoji-opt { font-size: 22px; width: 42px; height: 42px; border-radius: 11px; border: 2px solid transparent; background: var(--bg); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .15s; }
 .emoji-opt.selected { border-color: var(--accent); background: #2563eb1a; }
 
-/* COLOR PICKER - показываем настоящие цвета */
 .color-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
 .color-opt { width: 32px; height: 32px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: border-color .15s, transform .15s; }
 .color-opt.selected { border-color: var(--text); transform: scale(1.18); }
@@ -143,6 +140,12 @@ textarea { resize: none; height: 60px; }
 </style>
 </head>
 <body>
+
+<div class="loader-wrap" id="loader">
+  <div class="spinner"></div>
+  <div class="loader-text">Загрузка...</div>
+</div>
+
 <div class="top-nav">
   <div><div class="nav-title">💊 Витамины</div><div class="nav-date" id="navDate"></div></div>
   <div class="nav-right">
@@ -151,12 +154,10 @@ textarea { resize: none; height: 60px; }
     <button class="icon-btn" onclick="openStats()">📊</button>
   </div>
 </div>
+<div class="save-status" id="saveStatus"></div>
 <div class="progress-section">
   <div class="progress-label"><span id="progressLabel">Сегодня</span><span id="progressPct">0%</span></div>
   <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
-</div>
-<div class="sync-bar">
-  <button class="sync-btn" id="syncBtn" onclick="syncWithBot()">📲 Синхронизировать с ботом</button>
 </div>
 <div id="mainList"></div>
 <button class="fab" onclick="openModal()">+</button>
@@ -214,12 +215,13 @@ textarea { resize: none; height: 60px; }
 </div>
 
 <script>
-const EMOJIS=['💊','🌿','🧬','⚡','💪','🧠','❤️','🌙','☀️','🍋','🫐','🦴','👁️','🩸','🔋','🐟'];
-// Реальные цвета обводки
-const BORDER_COLORS=['#64748b','#22c55e','#ef4444','#818cf8','#eab308','#06b6d4','#d946ef','#f97316','#ec4899','#14b8a6'];
-// Фоны эмодзи — тёмные версии тех же цветов
-const BG_COLORS=['#1e293b','#1a2e1e','#2e1e1e','#1e1e2e','#2e2a1e','#1e2a2e','#2a1e2e','#2e221e','#2e1e26','#1e2a2a'];
+// ── КОНФИГ ──────────────────────────────────────────────
+// BOT_URL будет заменён на реальный URL из Railway
+const BOT_URL = "REPLACE_WITH_BOT_URL";
 
+const EMOJIS=['💊','🌿','🧬','⚡','💪','🧠','❤️','🌙','☀️','🍋','🫐','🦴','👁️','🩸','🔋','🐟'];
+const BORDER_COLORS=['#64748b','#22c55e','#ef4444','#818cf8','#eab308','#06b6d4','#d946ef','#f97316','#ec4899','#14b8a6'];
+const BG_COLORS=['#1e293b','#1a2e1e','#2e1e1e','#1e1e2e','#2e2a1e','#1e2a2e','#2a1e2e','#2e221e','#2e1e26','#1e2a2a'];
 const TEMPLATES=[
   {name:'Витамин D3',tablets:1,mg:2000,unit:'МЕ',emoji:'☀️',note:'с едой',takeTime:'08:00',colorIdx:3},
   {name:'Магний',tablets:1,mg:400,unit:'мг',emoji:'🦴',note:'вечером',takeTime:'21:00',colorIdx:1},
@@ -231,11 +233,78 @@ const TEMPLATES=[
   {name:'Витамин K2',tablets:1,mg:100,unit:'мкг',emoji:'🌿',note:'с едой',takeTime:'08:00',colorIdx:1},
 ];
 
-const KEY='vitamins_v6';
-let pills=[],archive=[],editId=null,selEmoji=EMOJIS[0],selColorIdx=0;
+// ── СОСТОЯНИЕ ────────────────────────────────────────────
+let pills=[], archive=[], editId=null, selEmoji=EMOJIS[0], selColorIdx=0;
+let userUid=null, saveTimer=null;
 
-function load(){try{const d=JSON.parse(localStorage.getItem(KEY))||{};pills=d.pills||[];archive=d.archive||[];}catch{pills=[];archive=[];}}
-function save(){localStorage.setItem(KEY,JSON.stringify({pills,archive}));}
+// ── TELEGRAM UID ─────────────────────────────────────────
+function getTelegramUid(){
+  try {
+    const tg=window.Telegram&&window.Telegram.WebApp;
+    if(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user){
+      return String(tg.initDataUnsafe.user.id);
+    }
+  } catch(e){}
+  // Fallback для тестирования вне Telegram
+  let uid=localStorage.getItem('fallback_uid');
+  if(!uid){uid='local_'+Date.now();localStorage.setItem('fallback_uid',uid);}
+  return uid;
+}
+
+// ── API ──────────────────────────────────────────────────
+async function apiLoad(){
+  if(!userUid||BOT_URL==='REPLACE_WITH_BOT_URL'){
+    // Fallback на localStorage если бот не настроен
+    try{const d=JSON.parse(localStorage.getItem('vitamins_v6'))||{};pills=d.pills||[];archive=d.archive||[];}catch{pills=[];archive=[];}
+    return;
+  }
+  try{
+    const r=await fetch(`${BOT_URL}/pills?uid=${userUid}`);
+    const d=await r.json();
+    const saved=d.pills||[];
+    // Разделяем активные и архивные
+    pills=saved.filter(p=>!p.archived);
+    archive=saved.filter(p=>p.archived);
+  } catch(e){
+    console.error('Ошибка загрузки:',e);
+    // Fallback на localStorage
+    try{const d=JSON.parse(localStorage.getItem('vitamins_v6'))||{};pills=d.pills||[];archive=d.archive||[];}catch{pills=[];archive=[];}
+  }
+}
+
+function setStatus(msg, cls){
+  const el=document.getElementById('saveStatus');
+  el.textContent=msg; el.className='save-status '+cls;
+}
+
+async function apiSave(){
+  // Всегда сохраняем в localStorage как резерв
+  localStorage.setItem('vitamins_v6',JSON.stringify({pills,archive}));
+
+  if(!userUid||BOT_URL==='REPLACE_WITH_BOT_URL') return;
+
+  setStatus('Сохранение...','saving');
+  try{
+    const allPills=[...pills,...archive];
+    await fetch(`${BOT_URL}/pills`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({uid:userUid, pills:allPills})
+    });
+    setStatus('Сохранено ✓','saved');
+    setTimeout(()=>setStatus('',''),2000);
+  } catch(e){
+    setStatus('Ошибка сохранения','error');
+    console.error(e);
+  }
+}
+
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(apiSave,800);
+}
+
+// ── UTILS ────────────────────────────────────────────────
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
 function pad(n){return String(n).padStart(2,'0');}
 function todayStr(){const d=new Date();return`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
@@ -243,111 +312,112 @@ function dateStr(d){return`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.get
 function fmtDate(s){if(!s)return'—';return new Date(s+'T00:00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'});}
 function fmtTime(ms){if(!ms)return'—';const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);return h>0?`${h}ч ${pad(m)}м`:`${pad(m)}м`;}
 function groupLabel(t){const h=parseInt(t.split(':')[0]);if(h>=5&&h<12)return'Утро';if(h>=12&&h<18)return'День';if(h>=18&&h<23)return'Вечер';return'Ночь';}
-function timeToMin(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
+function timeToMin(t){const[h,m]=(t||'00:00').split(':').map(Number);return h*60+m;}
 
-function expectedReset(rt){const now=new Date(),[rh,rm]=rt.split(':').map(Number);const r=new Date(now.getFullYear(),now.getMonth(),now.getDate(),rh,rm,0);if(now>=r)return todayStr();const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-1);return dateStr(d);}
+function expectedReset(rt){
+  const now=new Date(),[rh,rm]=rt.split(':').map(Number);
+  const r=new Date(now.getFullYear(),now.getMonth(),now.getDate(),rh,rm,0);
+  if(now>=r)return todayStr();
+  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-1);
+  return dateStr(d);
+}
 
 function autoReset(){
   let changed=false;
   pills.forEach(p=>{
-    const exp=expectedReset(p.resetTime);
+    const exp=expectedReset(p.resetTime||'00:00');
     if(p.lastResetDate!==exp){
-      if(p.lastResetDate){if(p.checked.every(Boolean))p.takenDays=(p.takenDays||0)+1;else p.missedDays=(p.missedDays||0)+1;}
-      p.checked=new Array(p.count).fill(false);p.lastResetDate=exp;changed=true;
+      if(p.lastResetDate){if(p.checked&&p.checked.every(Boolean))p.takenDays=(p.takenDays||0)+1;else p.missedDays=(p.missedDays||0)+1;}
+      p.checked=new Array(p.count||1).fill(false);p.lastResetDate=exp;changed=true;
     }
   });
-  pills=pills.filter(p=>{if(!p.courseDays)return true;if((p.takenDays||0)>=p.courseDays){p.archivedAt=todayStr();archive.push(p);changed=true;return false;}return true;});
-  if(changed)save();
+  pills=pills.filter(p=>{
+    if(!p.courseDays)return true;
+    if((p.takenDays||0)>=p.courseDays){p.archivedAt=todayStr();p.archived=true;archive.push(p);changed=true;return false;}
+    return true;
+  });
+  if(changed)scheduleSave();
 }
 
-function courseProgress(p){if(!p.courseDays)return null;const taken=(p.takenDays||0)+(p.checked.every(Boolean)?1:0);return{taken,total:p.courseDays,pct:Math.min(100,Math.round(taken/p.courseDays*100)),daysLeft:Math.max(0,p.courseDays-taken)};}
+function courseProgress(p){
+  if(!p.courseDays)return null;
+  const taken=(p.takenDays||0)+(p.checked&&p.checked.every(Boolean)?1:0);
+  return{taken,total:p.courseDays,pct:Math.min(100,Math.round(taken/p.courseDays*100)),daysLeft:Math.max(0,p.courseDays-taken)};
+}
 
+// ── THEME ────────────────────────────────────────────────
 function toggleTheme(){const dark=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',dark?'light':'dark');document.getElementById('themeBtn').textContent=dark?'🌙':'☀️';localStorage.setItem('vit_theme',dark?'light':'dark');}
 function loadTheme(){const t=localStorage.getItem('vit_theme')||'dark';document.documentElement.setAttribute('data-theme',t);document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';}
 
-// SYNC WITH BOT
-function syncWithBot(){
-  if(!pills.length){alert('Сначала добавь хотя бы один витамин.');return;}
-  // Собираем расписание: {время: [названия]}
-  const schedule={};
-  pills.forEach(p=>{
-    const t=p.takeTime||'08:00';
-    if(!schedule[t])schedule[t]=[];
-    schedule[t].push(p.name);
-  });
-  const payload='SYNC:'+JSON.stringify(schedule);
-  // Пробуем через Telegram WebApp API
-  if(window.Telegram&&window.Telegram.WebApp&&window.Telegram.WebApp.sendData){
-    window.Telegram.WebApp.sendData(payload);
-    const btn=document.getElementById('syncBtn');
-    btn.textContent='✅ Синхронизировано!';btn.classList.add('success');
-    setTimeout(()=>{btn.textContent='📲 Синхронизировать с ботом';btn.classList.remove('success');},3000);
-  } else {
-    // Показываем инструкцию если не в TMA
-    const lines=['Скопируй и отправь боту:\n',payload];
-    prompt('Скопируй и отправь боту:',payload);
-  }
-}
-
+// ── RENDER ───────────────────────────────────────────────
 function render(){
   autoReset();
   const now=new Date();const ds=now.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'});
   document.getElementById('navDate').textContent=ds.charAt(0).toUpperCase()+ds.slice(1);
-  const total=pills.reduce((s,p)=>s+p.count,0);const done=pills.reduce((s,p)=>s+p.checked.filter(Boolean).length,0);const pct=total?Math.round(done/total*100):0;
-  document.getElementById('progressBar').style.width=pct+'%';document.getElementById('progressLabel').textContent=`Принято ${done} из ${total}`;document.getElementById('progressPct').textContent=pct+'%';
+  const total=pills.reduce((s,p)=>s+(p.count||1),0);
+  const done=pills.reduce((s,p)=>s+(p.checked||[]).filter(Boolean).length,0);
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressLabel').textContent=`Принято ${done} из ${total}`;
+  document.getElementById('progressPct').textContent=pct+'%';
   const container=document.getElementById('mainList');
   if(!pills.length){container.innerHTML='<div class="empty"><span class="big">🌿</span>Нажми + чтобы добавить<br>первый витамин</div>';return;}
-
-  // Сортировка: сначала по времени приёма, принятые в конец
   const sorted=[...pills].sort((a,b)=>{
-    const aDone=a.checked.every(Boolean),bDone=b.checked.every(Boolean);
+    const aDone=(a.checked||[]).every(Boolean),bDone=(b.checked||[]).every(Boolean);
     if(aDone!==bDone)return aDone?1:-1;
-    return timeToMin(a.takeTime||'00:00')-timeToMin(b.takeTime||'00:00');
+    return timeToMin(a.takeTime)-timeToMin(b.takeTime);
   });
-
-  const groups={};
-  sorted.forEach(p=>{const g=groupLabel(p.takeTime||p.resetTime);if(!groups[g])groups[g]=[];groups[g].push(p);});
-  const order=['Утро','День','Вечер','Ночь'];
+  const groups={};sorted.forEach(p=>{const g=groupLabel(p.takeTime||p.resetTime||'08:00');if(!groups[g])groups[g]=[];groups[g].push(p);});
   let html='';
-  order.forEach(g=>{
+  ['Утро','День','Вечер','Ночь'].forEach(g=>{
     if(!groups[g])return;
     html+=`<div class="group-label">${g}</div><div class="list">`;
-    html+=groups[g].map((p,idx)=>pillHTML(p,idx,groups[g].length)).join('');
+    html+=groups[g].map((p,i)=>pillHTML(p,i,groups[g].length)).join('');
     html+=`</div>`;
   });
   container.innerHTML=html;
 }
 
 function pillHTML(p,idx,total){
-  const allDone=p.checked.every(Boolean);
+  const allDone=(p.checked||[]).every(Boolean);
   const cp=courseProgress(p);
   const borderColor=BORDER_COLORS[p.colorIdx||0];
   const bgColor=BG_COLORS[p.colorIdx||0];
-  const [rh,rm]=p.resetTime.split(':').map(Number);
-  const checks=p.checked.map((c,i)=>`<div class="check-pill ${c?'checked':''}" onclick="toggle('${p.id}',${i})"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><polyline points="2,6.5 5.5,10 11,3" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`).join('');
+  const [rh,rm]=(p.resetTime||'00:00').split(':').map(Number);
+  const checks=(p.checked||[]).map((c,i)=>`<div class="check-pill ${c?'checked':''}" onclick="toggle('${p.id}',${i})"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><polyline points="2,6.5 5.5,10 11,3" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`).join('');
   const courseBar=cp?`<div class="course-wrap"><div class="course-label"><span>Курс: ${cp.taken}/${cp.total} дн.</span><span>${cp.pct}% · осталось ${cp.daysLeft} дн.</span></div><div class="course-track"><div class="course-fill" style="width:${cp.pct}%;background:${borderColor}"></div></div></div>`:'';
   const badges=`<div class="pill-badges">${(p.streak||0)>0?`<div class="badge str">🔥 ${p.streak} дн.</div>`:''} ${(p.missedDays||0)>0?`<div class="badge mis">⚠️ ${p.missedDays} пропуск</div>`:''} ${p.avgCheckMs?`<div class="badge avg">⏱ ${fmtTime(p.avgCheckMs)}</div>`:''}<div class="badge">🔄 ${pad(rh)}:${pad(rm)}</div></div>`;
   const tabs=parseFloat(p.tablets)||1,mg=parseFloat(p.mgPerTab)||0,unit=p.unit||'мг',count=parseInt(p.count)||1;
   const totalMgDay=mg?`<span class="dose-total">${tabs*mg*count} ${unit}/день</span>`:'';
-  // Кнопки порядка (вместо drag на iOS)
   const orderBtns=`<div class="pill-order"><button class="order-btn" onclick="moveUp('${p.id}')" ${idx===0?'style="opacity:.3;pointer-events:none"':''}>▲</button><button class="order-btn" onclick="moveDown('${p.id}')" ${idx===total-1?'style="opacity:.3;pointer-events:none"':''}>▼</button></div>`;
   return `<div class="pill-card ${allDone?'done':''}" id="pc_${p.id}" style="border-color:${borderColor}"><div class="pill-top">${orderBtns}<div class="pill-emoji" style="background:${bgColor}">${p.emoji||'💊'}</div><div class="pill-main"><div class="pill-name">${p.name}</div><div class="pill-dose-line">${tabs} таб. ${mg?`× ${mg} ${unit}`:''} ${count>1?`· ${count}×/день`:''} ${totalMgDay}</div>${p.takeTime?`<div class="pill-time-line">⏰ ${p.takeTime}${p.startDate?' · с '+fmtDate(p.startDate):''}</div>`:''}${p.note?`<div class="pill-note">${p.note}</div>`:''}</div><div class="pill-actions"><button class="small-btn" onclick="openModal('${p.id}')">✏️</button><button class="small-btn" onclick="archivePill('${p.id}')">🗂</button><button class="small-btn del" onclick="deletePill('${p.id}')">🗑️</button></div></div><div class="checks-row">${checks}</div>${courseBar}${badges}</div>`;
 }
 
-function moveUp(id){const i=pills.findIndex(x=>x.id===id);if(i<=0)return;[pills[i-1],pills[i]]=[pills[i],pills[i-1]];save();render();}
-function moveDown(id){const i=pills.findIndex(x=>x.id===id);if(i<0||i>=pills.length-1)return;[pills[i],pills[i+1]]=[pills[i+1],pills[i]];save();render();}
+function moveUp(id){const i=pills.findIndex(x=>x.id===id);if(i<=0)return;[pills[i-1],pills[i]]=[pills[i],pills[i-1]];scheduleSave();render();}
+function moveDown(id){const i=pills.findIndex(x=>x.id===id);if(i<0||i>=pills.length-1)return;[pills[i],pills[i+1]]=[pills[i+1],pills[i]];scheduleSave();render();}
 
 function toggle(id,idx){
-  const p=pills.find(x=>x.id===id);if(!p)return;p.checked[idx]=!p.checked[idx];
-  if(p.checked[idx]){const now=new Date();const ms=(now.getHours()*3600+now.getMinutes()*60+now.getSeconds())*1000;if(!p.checkTimeSamples)p.checkTimeSamples=[];p.checkTimeSamples.push(ms);if(p.checkTimeSamples.length>30)p.checkTimeSamples.shift();p.avgCheckMs=Math.round(p.checkTimeSamples.reduce((a,b)=>a+b,0)/p.checkTimeSamples.length);}
-  if(p.checked.every(Boolean)){const today=todayStr();if(p.lastStreakDate!==today){p.streak=(p.streak||0)+1;p.lastStreakDate=today;}if(navigator.vibrate)navigator.vibrate([30,15,60]);const el=document.getElementById('pc_'+id);if(el){el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');}}
-  save();render();
+  const p=pills.find(x=>x.id===id);if(!p)return;
+  if(!p.checked)p.checked=new Array(p.count||1).fill(false);
+  p.checked[idx]=!p.checked[idx];
+  if(p.checked[idx]){
+    const now=new Date();const ms=(now.getHours()*3600+now.getMinutes()*60+now.getSeconds())*1000;
+    if(!p.checkTimeSamples)p.checkTimeSamples=[];p.checkTimeSamples.push(ms);
+    if(p.checkTimeSamples.length>30)p.checkTimeSamples.shift();
+    p.avgCheckMs=Math.round(p.checkTimeSamples.reduce((a,b)=>a+b,0)/p.checkTimeSamples.length);
+  }
+  if(p.checked.every(Boolean)){
+    const today=todayStr();if(p.lastStreakDate!==today){p.streak=(p.streak||0)+1;p.lastStreakDate=today;}
+    if(navigator.vibrate)navigator.vibrate([30,15,60]);
+    const el=document.getElementById('pc_'+id);if(el){el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');}
+  }
+  scheduleSave();render();
 }
 
-function deletePill(id){if(!confirm('Удалить?'))return;pills=pills.filter(x=>x.id!==id);save();render();}
-function archivePill(id){const p=pills.find(x=>x.id===id);if(!p)return;p.archivedAt=todayStr();archive.push(p);pills=pills.filter(x=>x.id!==id);save();render();}
+function deletePill(id){if(!confirm('Удалить?'))return;pills=pills.filter(x=>x.id!==id);scheduleSave();render();}
+function archivePill(id){const p=pills.find(x=>x.id===id);if(!p)return;p.archivedAt=todayStr();p.archived=true;archive.push(p);pills=pills.filter(x=>x.id!==id);scheduleSave();render();}
 
-function updateDoseHint(){const tabs=parseFloat(document.getElementById('iTablets').value)||1;const mg=parseFloat(document.getElementById('iMgPerTab').value)||0;const unit=document.getElementById('iUnit').value||'мг';const count=parseInt(document.getElementById('iCount').value)||1;const hint=document.getElementById('doseHint');if(!mg){hint.textContent='';return;}const perDose=tabs*mg;hint.textContent=count>1?`${perDose} ${unit}/приём · ${perDose*count} ${unit}/день`:`${perDose} ${unit}/день`;}
+function updateDoseHint(){const tabs=parseFloat(document.getElementById('iTablets').value)||1;const mg=parseFloat(document.getElementById('iMgPerTab').value)||0;const unit=document.getElementById('iUnit').value||'мг';const count=parseInt(document.getElementById('iCount').value)||1;const hint=document.getElementById('doseHint');if(!mg){hint.textContent='';return;}hint.textContent=count>1?`${tabs*mg} ${unit}/приём · ${tabs*mg*count} ${unit}/день`:`${tabs*mg} ${unit}/день`;}
 
 function openStats(){
   const totalTaken=pills.reduce((s,p)=>s+(p.takenDays||0),0);const totalMissed=pills.reduce((s,p)=>s+(p.missedDays||0),0);const bestStreak=pills.reduce((s,p)=>Math.max(s,p.streak||0),0);
@@ -356,10 +426,10 @@ function openStats(){
   document.getElementById('statsContent').innerHTML=overall+perPill;document.getElementById('statsOverlay').classList.add('open');
 }
 
-function exportStats(){const lines=['СТАТИСТИКА ВИТАМИНОВ','Дата: '+new Date().toLocaleDateString('ru-RU'),''];pills.forEach(p=>{const taken=p.takenDays||0,missed=p.missedDays||0;const pct=taken+missed?Math.round(taken/(taken+missed)*100):100;const tabs=parseFloat(p.tablets)||1,mg=parseFloat(p.mgPerTab)||0,unit=p.unit||'мг';const totalTabs=taken*tabs*(parseInt(p.count)||1);lines.push(`${p.emoji||''} ${p.name}`);if(mg)lines.push(`  Дозировка: ${tabs} таб. × ${mg} ${unit} = ${tabs*mg*(parseInt(p.count)||1)} ${unit}/день`);lines.push(`  Принято: ${taken} дн. | Пропущено: ${missed} | ${pct}%`);if(totalTabs)lines.push(`  Таблеток: ${totalTabs} шт.`);lines.push(`  Streak: ${p.streak||0} дн. | Среднее время: ${p.avgCheckMs?fmtTime(p.avgCheckMs):'—'}`);lines.push('');});const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='vitamins_stats.txt';a.click();}
+function exportStats(){const lines=['СТАТИСТИКА ВИТАМИНОВ','Дата: '+new Date().toLocaleDateString('ru-RU'),''];pills.forEach(p=>{const taken=p.takenDays||0,missed=p.missedDays||0;const pct=taken+missed?Math.round(taken/(taken+missed)*100):100;const tabs=parseFloat(p.tablets)||1,mg=parseFloat(p.mgPerTab)||0,unit=p.unit||'мг';const totalTabs=taken*tabs*(parseInt(p.count)||1);lines.push(`${p.emoji||''} ${p.name}`);if(mg)lines.push(`  Дозировка: ${tabs} таб. × ${mg} ${unit} = ${tabs*mg*(parseInt(p.count)||1)} ${unit}/день`);lines.push(`  Принято: ${taken} дн. | Пропущено: ${missed} | ${pct}%`);if(totalTabs)lines.push(`  Таблеток: ${totalTabs} шт.`);lines.push(`  Streak: ${p.streak||0} дн.`);lines.push('');});const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='vitamins_stats.txt';a.click();}
 
 function openArchive(){const c=document.getElementById('archiveContent');if(!archive.length){c.innerHTML='<div class="empty" style="margin-top:20px">Архив пуст</div>';}else{c.innerHTML=archive.map(p=>`<div class="stat-block"><h3 style="color:${BORDER_COLORS[p.colorIdx||0]}">${p.emoji||'💊'} ${p.name}</h3><div class="stat-row"><span>Завершён</span><span class="stat-val">${fmtDate(p.archivedAt)}</span></div><div class="stat-row"><span>Принято дней</span><span class="stat-val">${p.takenDays||0}</span></div><div class="stat-row"><span>Streak</span><span class="stat-val">🔥 ${p.streak||0}</span></div><button class="export-btn" style="margin-top:8px" onclick="restorePill('${p.id}')">↩️ Восстановить</button></div>`).join('');}document.getElementById('archiveOverlay').classList.add('open');}
-function restorePill(id){const idx=archive.findIndex(x=>x.id===id);if(idx<0)return;const p=archive.splice(idx,1)[0];p.archivedAt=null;p.checked=new Array(p.count).fill(false);p.lastResetDate=expectedReset(p.resetTime);pills.push(p);save();render();closeOverlay('archiveOverlay');}
+function restorePill(id){const idx=archive.findIndex(x=>x.id===id);if(idx<0)return;const p=archive.splice(idx,1)[0];p.archivedAt=null;p.archived=false;p.checked=new Array(p.count||1).fill(false);p.lastResetDate=expectedReset(p.resetTime||'00:00');pills.push(p);scheduleSave();render();closeOverlay('archiveOverlay');}
 
 function buildPickers(){
   document.getElementById('emojiGrid').innerHTML=EMOJIS.map(e=>`<div class="emoji-opt ${e===selEmoji?'selected':''}" onclick="pickEmoji('${e}')">${e}</div>`).join('');
@@ -372,7 +442,7 @@ function applyTemplate(i){const t=TEMPLATES[i];selEmoji=t.emoji;selColorIdx=t.co
 
 function openModal(id){
   editId=id||null;document.getElementById('formTitle').textContent=editId?'Редактировать':'Добавить витамин';
-  if(editId){const p=pills.find(x=>x.id===editId);selEmoji=p.emoji||EMOJIS[0];selColorIdx=p.colorIdx||0;document.getElementById('iName').value=p.name;document.getElementById('iTablets').value=p.tablets||1;document.getElementById('iMgPerTab').value=p.mgPerTab||'';document.getElementById('iUnit').value=p.unit||'мг';document.getElementById('iNote').value=p.note||'';document.getElementById('iCount').value=p.count;document.getElementById('iTakeTime').value=p.takeTime||'08:00';document.getElementById('iReset').value=p.resetTime;document.getElementById('iCourse').value=p.courseDays||0;document.getElementById('iStart').value=p.startDate||todayStr();}
+  if(editId){const p=pills.find(x=>x.id===editId);selEmoji=p.emoji||EMOJIS[0];selColorIdx=p.colorIdx||0;document.getElementById('iName').value=p.name;document.getElementById('iTablets').value=p.tablets||1;document.getElementById('iMgPerTab').value=p.mgPerTab||'';document.getElementById('iUnit').value=p.unit||'мг';document.getElementById('iNote').value=p.note||'';document.getElementById('iCount').value=p.count||1;document.getElementById('iTakeTime').value=p.takeTime||'08:00';document.getElementById('iReset').value=p.resetTime||'00:00';document.getElementById('iCourse').value=p.courseDays||0;document.getElementById('iStart').value=p.startDate||todayStr();}
   else{selEmoji=EMOJIS[0];selColorIdx=0;['iName','iNote'].forEach(i=>document.getElementById(i).value='');document.getElementById('iTablets').value=1;document.getElementById('iMgPerTab').value='';document.getElementById('iUnit').value='мг';document.getElementById('iCount').value=1;document.getElementById('iTakeTime').value='08:00';document.getElementById('iReset').value='00:00';document.getElementById('iCourse').value=0;document.getElementById('iStart').value=todayStr();}
   buildPickers();updateDoseHint();document.getElementById('formOverlay').classList.add('open');setTimeout(()=>document.getElementById('iName').focus(),150);
 }
@@ -382,17 +452,25 @@ function savePill(){
   const tablets=parseFloat(document.getElementById('iTablets').value)||1;const mgPerTab=parseFloat(document.getElementById('iMgPerTab').value)||0;const unit=document.getElementById('iUnit').value.trim()||'мг';const note=document.getElementById('iNote').value.trim();const count=Math.max(1,Math.min(10,parseInt(document.getElementById('iCount').value)||1));const takeTime=document.getElementById('iTakeTime').value||'08:00';const resetTime=document.getElementById('iReset').value||'00:00';const courseDays=parseInt(document.getElementById('iCourse').value)||0;const startDate=document.getElementById('iStart').value||todayStr();
   if(editId){const p=pills.find(x=>x.id===editId);Object.assign(p,{emoji:selEmoji,colorIdx:selColorIdx,name,tablets,mgPerTab,unit,note,count,takeTime,resetTime,courseDays,startDate});if(count!==p.checked.length)p.checked=new Array(count).fill(false);}
   else{pills.push({id:uid(),emoji:selEmoji,colorIdx:selColorIdx,name,tablets,mgPerTab,unit,note,count,takeTime,resetTime,courseDays,startDate,checked:new Array(count).fill(false),lastResetDate:expectedReset(resetTime),streak:0,lastStreakDate:null,takenDays:0,missedDays:0,checkTimeSamples:[],avgCheckMs:0});}
-  save();closeOverlay('formOverlay');render();
+  scheduleSave();closeOverlay('formOverlay');render();
 }
 
 function closeOverlay(id){document.getElementById(id).classList.remove('open');editId=null;}
 function bgClick(e,id){if(e.target===document.getElementById(id))closeOverlay(id);}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')['formOverlay','statsOverlay','archiveOverlay'].forEach(closeOverlay);if(e.key==='Enter'&&document.getElementById('formOverlay').classList.contains('open'))savePill();});
 
-// Инициализация Telegram WebApp
-if(window.Telegram&&window.Telegram.WebApp){window.Telegram.WebApp.ready();window.Telegram.WebApp.expand();}
+// ── INIT ─────────────────────────────────────────────────
+async function init(){
+  loadTheme();
+  if(window.Telegram&&window.Telegram.WebApp){window.Telegram.WebApp.ready();window.Telegram.WebApp.expand();}
+  userUid=getTelegramUid();
+  await apiLoad();
+  document.getElementById('loader').classList.add('hidden');
+  render();
+  setInterval(render,60000);
+}
 
-loadTheme();load();render();setInterval(render,60000);
+init();
 </script>
 </body>
 </html>
