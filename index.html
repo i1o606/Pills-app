@@ -459,12 +459,32 @@ function closeOverlay(id){document.getElementById(id).classList.remove('open');e
 function bgClick(e,id){if(e.target===document.getElementById(id))closeOverlay(id);}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')['formOverlay','statsOverlay','archiveOverlay'].forEach(closeOverlay);if(e.key==='Enter'&&document.getElementById('formOverlay').classList.contains('open'))savePill();});
 
-// ── INIT ─────────────────────────────────────────────────
+// ── НОВАЯ ФУНКЦИЯ: ОТПРАВКА ЧАСОВОГО ПОЯСА ──────────────
+async function sendTimezoneToBot() {
+    if (!userUid || BOT_URL === 'REPLACE_WITH_BOT_URL') return;
+    
+    try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        await fetch(`${BOT_URL}/set_timezone`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ uid: userUid, timezone: tz })
+        });
+        console.log(`✅ Часовой пояс отправлен: ${tz}`);
+    } catch(e) {
+        console.log('❌ Не удалось отправить часовой пояс');
+    }
+}
+
 async function init(){
   loadTheme();
   if(window.Telegram&&window.Telegram.WebApp){window.Telegram.WebApp.ready();window.Telegram.WebApp.expand();}
   userUid=getTelegramUid();
   await apiLoad();
+  
+  // ─── ОТПРАВЛЯЕМ ЧАСОВОЙ ПОЯС ───
+  await sendTimezoneToBot();
+  
   document.getElementById('loader').classList.add('hidden');
   render();
   setInterval(render,60000);
