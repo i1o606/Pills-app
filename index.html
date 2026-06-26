@@ -245,19 +245,11 @@ function getTelegramUid(){
             return String(tg.initDataUnsafe.user.id);
         }
     } catch(e){}
-    // Fallback — берём из URL параметра если есть
     const urlParams=new URLSearchParams(window.location.search);
     const uidParam=urlParams.get('uid');
-    if(uidParam) return uidParam;
-    
+    if(uidParam&&!uidParam.startsWith('local_'))return uidParam;
     let uid=localStorage.getItem('fallback_uid');
     if(!uid){uid='local_'+Date.now();localStorage.setItem('fallback_uid',uid);}
-    return uid;
-        }
-    } catch(e){ console.log('TG error:', e); }
-    let uid=localStorage.getItem('fallback_uid');
-    if(!uid){uid='local_'+Date.now();localStorage.setItem('fallback_uid',uid);}
-    console.log('Fallback UID:', uid);
     return uid;
 }
 
