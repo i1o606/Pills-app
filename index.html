@@ -242,12 +242,22 @@ function getTelegramUid(){
     try {
         const tg=window.Telegram&&window.Telegram.WebApp;
         if(tg&&tg.initData&&tg.initData.length>0&&tg.initDataUnsafe&&tg.initDataUnsafe.user){
-            return String(tg.initDataUnsafe.user.id);
+            const id=String(tg.initDataUnsafe.user.id);
+            localStorage.setItem('real_uid',id);
+            return id;
         }
     } catch(e){}
+    // URL параметр ?uid= — приходит из кнопки бота
     const urlParams=new URLSearchParams(window.location.search);
     const uidParam=urlParams.get('uid');
-    if(uidParam&&!uidParam.startsWith('local_'))return uidParam;
+    if(uidParam&&!uidParam.startsWith('local_')){
+        localStorage.setItem('real_uid',uidParam);
+        return uidParam;
+    }
+    // Кеш из предыдущего открытия с правильным uid
+    const cached=localStorage.getItem('real_uid');
+    if(cached&&!cached.startsWith('local_'))return cached;
+    // Крайний fallback
     let uid=localStorage.getItem('fallback_uid');
     if(!uid){uid='local_'+Date.now();localStorage.setItem('fallback_uid',uid);}
     return uid;
